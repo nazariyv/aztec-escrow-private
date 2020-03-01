@@ -1,4 +1,4 @@
-const PrivateEscrow = require("../build/PrivateEscrow.json.js.js.js");
+const PrivateEscrow = require("../build/PrivateEscrow.json");
 const web3 = require("../web3");
 const ADDRESS = "..."; // TODO: DEPLOY!
 
