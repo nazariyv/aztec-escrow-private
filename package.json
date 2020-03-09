@@ -1,8 +1,10 @@
 {
   "name": "aztec-escrow",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
+    "@aztec/contract-addresses": "^1.18.0",
+    "@aztec/contract-artifacts": "^1.20.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.1",
     "@testing-library/user-event": "^7.2.1",
@@ -36,5 +38,16 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "description": "Private escrow using Aztec protocol",
+  "main": "index.js",
+  "repository": "https://github.com/nazariyv/aztec-escrow-private.git",
+  "author": "Nazariy Vavryk <nazariy@inbox.ru>",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomiclabs/buidler": "^1.2.0",
+    "@nomiclabs/buidler-truffle5": "^1.2.0",
+    "@nomiclabs/buidler-web3": "^1.2.0",
+    "web3": "^1.2.0"
   }
 }

@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Client as Styletron } from "styletron-engine-atomic";
 import { Provider as StyletronProvider } from "styletron-react";
 import { LightTheme, BaseProvider, styled } from "baseui";
+import { getContractAddressesForNetwork } from "@aztec/contract-addresses";
+
+import getWeb3 from "./utils/web3";
 
 import {
   Main,
@@ -25,18 +28,30 @@ class App extends React.Component {
   state = {
     sdkLoaded: false,
     account: null,
-    network: null
+    network: null,
+    error: null,
+    web3: null
+  };
+
+  componentDidMount = async () => {
+    if (window.aztec) {
+      this.aztecSdkLoaded();
+    } else {
+      window.aztecCallback = this.aztecSdkLoaded;
+    }
+
+    const web3 = await getWeb3();
+    this.setState({ web3 });
   };
 
   enableAztecSdk = async () => {
-    // const {
-    //   network,
-    // } = this.state;
     try {
       const contractAddresses = {
-        ganache: {
-          ACE: "0xFA8eD6F76e8f769872a1f8a89085c56909EC8Cfc", //getContractAddress('ACE', network),
-          AccountRegistryManager: "0x66db0e20a9d619ee3dfa3819513ab8bed1b21a87" //getContractAddress('AccountRegistryManager', network),
+        rinkeby: {
+          ACE: getContractAddressesForNetwork(this.state.network)["ACE"],
+          AccountRegistryManager: getContractAddressesForNetwork(
+            this.state.network
+          )["AccountRegistryManager"]
         }
       };
       await window.aztec.enable({
@@ -44,7 +59,7 @@ class App extends React.Component {
         contractAddresses
       });
     } catch (error) {
-      console.error("Failed to enable AZTEC SDK.");
+      console.error("failed to enable aztec sdk");
       console.log(error);
       this.setState({
         error
@@ -52,20 +67,9 @@ class App extends React.Component {
     }
   };
 
-  componentDidMount = () => {
-    if (window.aztec) {
-      this.aztecSdkLoaded();
-    } else {
-      window.aztecCallback = this.aztecSdkLoaded;
-    }
-  };
-
   aztecSdkLoaded = () => {
-    // window.aztec.addListener("profileChanged", this.handleProfileChanged);
-
     const account = window.aztec.web3.getAccount();
     const network = window.aztec.web3.getNetwork();
-
     this.setState(
       {
         sdkLoaded: true,
