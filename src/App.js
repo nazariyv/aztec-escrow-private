@@ -8,13 +8,14 @@ import { getContractAddressesForNetwork } from "@aztec/contract-addresses";
 import getWeb3 from "./utils/web3";
 
 import {
-  Main,
   CreateEscrow,
   CheckEscrow,
   ApproveEscrow,
   ReleaseEscrow,
-  HowItWorks
+  HowItWorks,
+  Main
 } from "./pages";
+import { AppLayout } from "./components";
 
 const engine = new Styletron();
 const Centered = styled("div", {
@@ -48,9 +49,9 @@ class App extends React.Component {
     try {
       const contractAddresses = {
         rinkeby: {
-          ACE: getContractAddressesForNetwork(this.state.network)["ACE"],
+          ACE: getContractAddressesForNetwork(this.state.network.id)["ACE"],
           AccountRegistryManager: getContractAddressesForNetwork(
-            this.state.network
+            this.state.network.id
           )["AccountRegistryManager"]
         }
       };
@@ -85,14 +86,16 @@ class App extends React.Component {
       <BaseProvider theme={LightTheme}>
         <Centered>
           <Router>
-            <Main />
-            <Switch>
-              <Route path="/create-escrow" exact component={CreateEscrow} />
-              <Route path="/check-escrow" exact component={CheckEscrow} />
-              <Route path="/approve-escrow" exact component={ApproveEscrow} />
-              <Route path="/release-escrow" exact component={ReleaseEscrow} />
-              <Route path="/how-it-works" exact component={HowItWorks} />
-            </Switch>
+            <AppLayout>
+              {/* <Main /> */}
+              <Switch>
+                <Route path="/create-escrow" exact component={CreateEscrow} />
+                <Route path="/check-escrow" exact component={CheckEscrow} />
+                <Route path="/approve-escrow" exact component={ApproveEscrow} />
+                <Route path="/release-escrow" exact component={ReleaseEscrow} />
+                <Route path="/how-it-works" exact component={HowItWorks} />
+              </Switch>
+            </AppLayout>
           </Router>
         </Centered>
       </BaseProvider>

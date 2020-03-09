@@ -12,7 +12,7 @@ const Header = ({ history }) => {
   return (
     <HeaderNavigation>
       <StyledNavigationList $align={ALIGN.left}>
-        <StyledNavigationItem>Aztec Private Escrow</StyledNavigationItem>
+        <StyledNavigationItem>Ethereum Private Escrow</StyledNavigationItem>
       </StyledNavigationList>
       <StyledNavigationList $align={ALIGN.center} />
       <StyledNavigationList $align={ALIGN.right}></StyledNavigationList>

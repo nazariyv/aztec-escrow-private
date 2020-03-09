@@ -1,39 +1,38 @@
-import React from "react";
-import ToolLayoutBaseUI from "../components/ToolLayoutBaseUI";
-import SideNavigation from "../components/SideNavigation";
-import { Block } from "baseui/block";
+import React, { useState, useEffect, useCallback } from "react";
 
-const loadAztec = () => {
-  let scriptElement = document.querySelector("script");
-  let head = document.querySelector("head");
+import getWeb3 from "../utils/web3";
 
-  return new Promise((resolve, reject) => {
-    scriptElement.src = "https://sdk.aztecprotocol.com/aztec.js";
-    scriptElement.onload = e => resolve(e);
-    scriptElement.onerror = e => reject(e);
-    head.appendChild(scriptElement);
-  });
-};
+const zkAssetAddress = "0x54Fac13e652702a733464bbcB0Fb403F1c057E1b";
 
-class Main extends React.Component {
-  componentDidMount = async () => {
-    console.log("aztec loading initiated");
-    await loadAztec();
-    console.log("aztec loaded");
+export default () => {
+  const [account, setAccount] = useState(null);
+  const [zkAsset, setZkAsset] = useState();
+  const [daiBalance, setDaiBalance] = useState(0);
+  const [zkDaiBalance, setZkdaiBalance] = useState(0);
+
+  const getBalances = async asset => {
+    const publicBalance = await asset.balanceOfLinkedToken(account);
+    const zkBalance = await asset.balance();
+    setDaiBalance(publicBalance.toString(10));
+    setZkdaiBalance(zkBalance);
   };
 
-  render = () => (
-    <ToolLayoutBaseUI>
-      {/* <Script
-        url="https://sdk.aztecprotocol.com/aztec.js"
-        onError={() => console.log("could not load aztec")}
-        onLoad={() => console.log("aztec loaded")}
-      /> */}
-      <Block display="flex" alignItems="left" width="180px">
-        <SideNavigation />
-      </Block>
-    </ToolLayoutBaseUI>
-  );
-}
+  useEffect(() => {
+    const onDidMount = async () => {
+      const web3 = await getWeb3();
+      const accounts = await web3.eth.getAccounts();
+      setAccount(accounts[0]);
+      const asset = await window.aztec.zkAsset(zkAssetAddress);
+      setZkAsset(asset);
+      await getBalances(asset);
+    };
+    onDidMount();
+  }, []);
 
-export default Main;
+  return (
+    <>
+      Your DAI balance: {daiBalance} <br />
+      Your zkDAI balance: {zkDaiBalance}
+    </>
+  );
+};

@@ -1,4 +1,4 @@
-pragma solidity ^0.6.1;
+pragma solidity >0.5.0 <=0.6.3;
 
 // receiver only able to view his own escrows
 // sender only able to view his own escrows too
