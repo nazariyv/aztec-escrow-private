@@ -9,6 +9,7 @@
     "@testing-library/react": "^9.4.1",
     "@testing-library/user-event": "^7.2.1",
     "baseui": "^9.60.0",
+    "fs-extra": "^8.1.0",
     "github-markdown-css": "^4.0.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
