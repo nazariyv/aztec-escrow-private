@@ -3,9 +3,7 @@ pragma solidity >0.5.0 <=0.6.3;
 // receiver only able to view his own escrows
 // sender only able to view his own escrows too
 // this cannot be done in Solidity because would need an array for each address in escrow (looping through map is infeasible)
-// therefore need a backend to store this information. MongoDB
-
-// TODO: remove the escrowID, the value (aztec value) is the id itself actually (need to check this)
+// for react app can store all of this information in localStorage
 
 contract PrivateEscrow {
     address owner;
@@ -40,8 +38,7 @@ contract PrivateEscrow {
     function getEscrow(
         bytes16 escrowID,
         address payable sender,
-        address payable receiver,
-        uint256 value
+        address payable receiver
     )
         private
         view
@@ -50,15 +47,14 @@ contract PrivateEscrow {
             Escrow memory
         )
     {
-        bytes32 tradeHash = getEscrowHash(escrowID, sender, receiver, value);
+        bytes32 tradeHash = getEscrowHash(escrowID, sender, receiver);
         return escrows[tradeHash];
     }
 
     function getEscrowHash(
         bytes16 escrowID,
         address payable sender,
-        address payable receiver,
-        uint256 value
+        address payable receiver
     )
         private
         pure
@@ -68,7 +64,7 @@ contract PrivateEscrow {
         )
     {
         bytes32 tradeHash = keccak256(
-            abi.encodePacked(escrowID, sender, receiver, value)
+            abi.encodePacked(escrowID, sender, receiver)
         );
         return tradeHash;
     }
@@ -79,8 +75,7 @@ contract PrivateEscrow {
         */
         bytes16 escrowID,
         address payable sender,
-        address payable receiver,
-        uint256 value
+        address payable receiver
     )
         public
         view
@@ -89,7 +84,7 @@ contract PrivateEscrow {
             bool
         )
     {
-        bytes32 tradeHash = getEscrowHash(escrowID, sender, receiver, value);
+        bytes32 tradeHash = getEscrowHash(escrowID, sender, receiver);
         return escrows[tradeHash].exists;
     }
 
@@ -103,7 +98,7 @@ contract PrivateEscrow {
         uint256 value // The zDAI amount being held in escrow // uint16 fee // the fee that we earn
     ) external payable {
         address payable sender = msg.sender;
-        bytes32 tradeHash = getEscrowHash(escrowID, sender, receiver, value);
+        bytes32 tradeHash = getEscrowHash(escrowID, sender, receiver);
         require(!escrows[tradeHash].exists, "could not find escrow"); // Require that trade does not already exist
         require(msg.value == value && msg.value > 0, "incorrect value"); // Check sent eth against signed _value and make sure is not 0
         escrows[tradeHash] = Escrow(true, false, false); // * keep struct in case need to add anything else in there
@@ -115,10 +110,9 @@ contract PrivateEscrow {
     function approve(
         bytes16 escrowID,
         address payable sender,
-        address payable receiver,
-        uint256 value
+        address payable receiver
     ) external onlyEscrowParties(sender, receiver) {
-        bytes32 tradeHash = getEscrowHash(escrowID, sender, receiver, value);
+        bytes32 tradeHash = getEscrowHash(escrowID, sender, receiver);
         require(escrows[tradeHash].exists, "escrow not found");
         // the modifier requires that either the sender or the caller called the approve function
         // so if not sender called this, then it must be that the receiver called it
@@ -149,7 +143,7 @@ contract PrivateEscrow {
         address payable receiver,
         uint256 value
     ) external payable onlyEscrowParties(sender, receiver) returns (bool) {
-        bytes32 tradeHash = getEscrowHash(escrowID, sender, receiver, value);
+        bytes32 tradeHash = getEscrowHash(escrowID, sender, receiver);
         require(escrows[tradeHash].exists, "escrow not found");
         require(
             escrows[tradeHash].senderApproved &&

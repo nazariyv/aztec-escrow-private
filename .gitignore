@@ -1,8 +1,8 @@
 node_modules/
 
 #Buidler files
-cache
-artifacts
+cache/
+artifacts/
 
 # vscode settings
 .vscode/

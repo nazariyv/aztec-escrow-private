@@ -3,10 +3,16 @@ import Header from "./header";
 import { Block } from "baseui/block";
 
 import SideNavigation from "./side-navigation";
+import Footer from "./footer";
 
 export default ({ children }) => {
   return (
-    <Block display="flex" flexDirection="column" minWidth="900px">
+    <Block
+      display="flex"
+      flexDirection="column"
+      minWidth="900px"
+      height="100vh"
+    >
       <Block>
         <Header />
       </Block>
@@ -15,6 +21,9 @@ export default ({ children }) => {
           <SideNavigation />
         </Block>
         <Block flex="auto">{children}</Block>
+      </Block>
+      <Block marginTop="auto" paddingBottom="20px">
+        <Footer />
       </Block>
     </Block>
   );

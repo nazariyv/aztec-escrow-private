@@ -103,16 +103,40 @@ class App extends React.Component {
             <AppLayout>
               <Switch>
                 <Route path="/" exact>
-                  <Main
-                    daiBalance={this.state.daiBalance}
-                    zkDaiBalance={this.state.zkDaiBalance}
-                    isFetching={this.state.isFetching}
-                  />
+                  <Block
+                    display="flex"
+                    flexDirection="row"
+                    height="100%"
+                    alignItems="center"
+                    justifyContent="space-evenly"
+                  >
+                    <Main
+                      daiBalance={this.state.daiBalance}
+                      zkDaiBalance={this.state.zkDaiBalance}
+                      isFetching={this.state.isFetching}
+                    />
+                  </Block>
                 </Route>
-                <Route path="/create-escrow" exact component={CreateEscrow} />
-                <Route path="/check-escrow" exact component={CheckEscrow} />
-                <Route path="/approve-escrow" exact component={ApproveEscrow} />
-                <Route path="/release-escrow" exact component={ReleaseEscrow} />
+                <Route path="/create-escrow" exact>
+                  <Block maxWidth="600px" padding="20px">
+                    <CreateEscrow />
+                  </Block>
+                </Route>
+                <Route path="/check-escrow" exact>
+                  <Block maxWidth="600px" padding="20px">
+                    <CheckEscrow />
+                  </Block>
+                </Route>
+                <Route path="/approve-escrow" exact>
+                  <Block maxWidth="600px" padding="20px">
+                    <ApproveEscrow />
+                  </Block>
+                </Route>
+                <Route path="/release-escrow" exact>
+                  <Block maxWidth="600px" padding="20px">
+                    <ReleaseEscrow />
+                  </Block>
+                </Route>
                 <Route path="/how-it-works" exact>
                   <Block maxWidth="600px" padding="20px">
                     <HowItWorks />

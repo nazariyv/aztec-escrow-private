@@ -15,13 +15,7 @@ export default ({ daiBalance, zkDaiBalance, isFetching }) => {
     );
 
   return (
-    <Block
-      display="flex"
-      flexDirection="row"
-      height="100%"
-      alignItems="center"
-      justifyContent="space-evenly"
-    >
+    <>
       <Block>
         <Text style={{ fontSize: "14px" }}>Your DAI balance</Text>
         <Input value={daiBalance} disabled size={SIZE.default} />
@@ -35,6 +29,6 @@ export default ({ daiBalance, zkDaiBalance, isFetching }) => {
           startEnhancer="zk"
         />
       </Block>
-    </Block>
+    </>
   );
 };

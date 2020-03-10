@@ -45,3 +45,18 @@ It is important to note that the process of taking DAI and converting it into zk
 ![aztec get zkdai image 2](aztec-zkdai-get-2)
 
 which clearly shows that I have sent 50 DAI to a smart contract that then converts it into zk dai. This means that the more people use the zk asset, the more private it will become
+
+# How this app works?
+
+We first assume that we have a private asset in our possession. We then send the private asset to a smart contract that acts as an escrow third party. For simple proofs, like join-split proof, we can use Aztec's `.send()` directly, which creates the notes for us under the hood. According to [this](https://medium.com/aztec-protocol/why-hashes-dominate-in-snarks-b20a555f074c) and [this](https://docs.aztecprotocol.com/#/SDK/note/Introduction) we can use the note hash as a unique identifier of a transaction directly (this sentence should go into the Medium blog post).
+
+We are able to specify the number of output notes to be created with `.send()`. The more notes you create, the harder it will be to infer the actual amounts of the notes. You are also able to give the viewing permissions to the created notes to other addresses. We shall use this feature, to provide the "proof of funds" for the party that shall receive the escrow. For simplicity, we create a single output note in the `Create Escrow` window. If multiple notes are created, a hash of their hashed can be used as a unique identifier of an escrow.
+
+# TODO
+
+1. We can move all the Aztec faucets to this website, in case their docs change in the future
+2. We are not updating the accounts / network when we switch them with MetaMask
+3. validation of inputs and warning / error messages when something goes wrong
+4. Explain the workflow better so that anyone can understand it easily
+5. shows how many approves needed to release the funds
+6. automatic release after enough approves (the last step is unnecessary)
