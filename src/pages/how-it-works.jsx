@@ -46,8 +46,6 @@ export default () => {
       <hr />
       <Text style={{ fontSize: "10px" }}>
         Last-Modified: Tue, 10 Mar 2020 21:21:21 GMT
-        <br />
-        Author: Nazariy Vavryk, nazariy@inbox.ru
       </Text>
     </>
   );

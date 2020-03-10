@@ -113,7 +113,7 @@ class App extends React.Component {
                 </Route>
                 <Route path="/create-escrow" exact>
                   <Block maxWidth="600px" padding="20px">
-                    <CreateEscrow />
+                    <CreateEscrow web3={this.state.web3} />
                   </Block>
                 </Route>
                 <Route path="/check-escrow" exact>

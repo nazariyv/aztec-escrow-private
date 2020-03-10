@@ -52,7 +52,7 @@ We first assume that we have a private asset in our possession. We then send the
 
 We are able to specify the number of output notes to be created with `.send()`. The more notes you create, the harder it will be to infer the actual amounts of the notes. You are also able to give the viewing permissions to the created notes to other addresses. We shall use this feature, to provide the "proof of funds" for the party that shall receive the escrow. For simplicity, we create a single output note in the `Create Escrow` window. If multiple notes are created, a hash of their hashed can be used as a unique identifier of an escrow.
 
-# TODO
+# How You can contribute
 
 1. We can move all the Aztec faucets to this website, in case their docs change in the future
 2. We are not updating the accounts / network when we switch them with MetaMask
@@ -60,3 +60,10 @@ We are able to specify the number of output notes to be created with `.send()`. 
 4. Explain the workflow better so that anyone can understand it easily
 5. shows how many approves needed to release the funds
 6. automatic release after enough approves (the last step is unnecessary)
+7. headerNavigation's grey line is awwwful
+8. move this app to mainnet
+9. add more tokens
+10. add fees to be collected by the escrow smart contract
+11. create react context to share the state of the App
+12. ability to have caption and error at the same time with FormControl components
+13. use baseui's constants for fontsizes, paddings, etc.
