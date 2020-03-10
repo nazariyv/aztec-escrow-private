@@ -6,7 +6,7 @@ import SideNavigation from "./side-navigation";
 
 export default ({ children }) => {
   return (
-    <Block display="flex" flexDirection="column" minWidth="800px">
+    <Block display="flex" flexDirection="column" minWidth="900px">
       <Block>
         <Header />
       </Block>

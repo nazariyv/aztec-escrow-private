@@ -4,6 +4,7 @@ import { Client as Styletron } from "styletron-engine-atomic";
 import { Provider as StyletronProvider } from "styletron-react";
 import { LightTheme, BaseProvider } from "baseui";
 import { getContractAddressesForNetwork } from "@aztec/contract-addresses";
+import { Block } from "baseui/block";
 
 import getWeb3 from "./utils/web3";
 import Centered from "./components/centered";
@@ -112,7 +113,11 @@ class App extends React.Component {
                 <Route path="/check-escrow" exact component={CheckEscrow} />
                 <Route path="/approve-escrow" exact component={ApproveEscrow} />
                 <Route path="/release-escrow" exact component={ReleaseEscrow} />
-                <Route path="/how-it-works" exact component={HowItWorks} />
+                <Route path="/how-it-works" exact>
+                  <Block maxWidth="600px" padding="20px">
+                    <HowItWorks />
+                  </Block>
+                </Route>
               </Switch>
             </AppLayout>
           </Router>
