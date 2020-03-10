@@ -25,24 +25,26 @@ const Centered = styled("div", {
   height: "100%"
 });
 
+const zkAssetAddress = "0x54Fac13e652702a733464bbcB0Fb403F1c057E1b";
+
 class App extends React.Component {
   state = {
     sdkLoaded: false,
     account: null,
     network: null,
     error: null,
-    web3: null
+    asset: null,
+    web3: null,
+    daiBalance: 0,
+    zkDaiBalance: 0
   };
 
   componentDidMount = async () => {
     if (window.aztec) {
-      this.aztecSdkLoaded();
+      await this.aztecSdkLoaded();
     } else {
       window.aztecCallback = this.aztecSdkLoaded;
     }
-
-    const web3 = await getWeb3();
-    this.setState({ web3 });
   };
 
   enableAztecSdk = async () => {
@@ -55,9 +57,21 @@ class App extends React.Component {
           )["AccountRegistryManager"]
         }
       };
+
       await window.aztec.enable({
         apiKey: "ethglobalstarterkit",
         contractAddresses
+      });
+
+      const web3 = await getWeb3();
+      const asset = await window.aztec.zkAsset(zkAssetAddress);
+      const { daiBalance, zkDaiBalance } = await this.getBalances(asset);
+
+      this.setState({
+        web3,
+        asset,
+        daiBalance,
+        zkDaiBalance
       });
     } catch (error) {
       console.error("failed to enable aztec sdk");
@@ -68,17 +82,23 @@ class App extends React.Component {
     }
   };
 
-  aztecSdkLoaded = () => {
+  aztecSdkLoaded = async () => {
     const account = window.aztec.web3.getAccount();
     const network = window.aztec.web3.getNetwork();
     this.setState(
       {
         sdkLoaded: true,
-        account,
+        account: account.address,
         network
       },
       this.enableAztecSdk
     );
+  };
+
+  getBalances = async asset => {
+    const daiBalance = await asset.balanceOfLinkedToken(this.state.account);
+    const zkDaiBalance = await asset.balance();
+    return { daiBalance: daiBalance.toString(10), zkDaiBalance };
   };
 
   render = () => (
@@ -87,7 +107,10 @@ class App extends React.Component {
         <Centered>
           <Router>
             <AppLayout>
-              {/* <Main /> */}
+              <Main
+                daiBalance={this.state.daiBalance}
+                zkDaiBalance={this.state.zkDaiBalance}
+              />
               <Switch>
                 <Route path="/create-escrow" exact component={CreateEscrow} />
                 <Route path="/check-escrow" exact component={CheckEscrow} />
