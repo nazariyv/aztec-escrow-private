@@ -2,11 +2,11 @@ import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Client as Styletron } from "styletron-engine-atomic";
 import { Provider as StyletronProvider } from "styletron-react";
-import { LightTheme, BaseProvider, styled } from "baseui";
+import { LightTheme, BaseProvider } from "baseui";
 import { getContractAddressesForNetwork } from "@aztec/contract-addresses";
 
 import getWeb3 from "./utils/web3";
-
+import Centered from "./components/centered";
 import {
   CreateEscrow,
   CheckEscrow,
@@ -18,18 +18,11 @@ import {
 import { AppLayout } from "./components";
 
 const engine = new Styletron();
-const Centered = styled("div", {
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  height: "100%"
-});
-
 const zkAssetAddress = "0x54Fac13e652702a733464bbcB0Fb403F1c057E1b";
 
 class App extends React.Component {
   state = {
-    sdkLoaded: false,
+    isFetching: true,
     account: null,
     network: null,
     error: null,
@@ -68,6 +61,7 @@ class App extends React.Component {
       const { daiBalance, zkDaiBalance } = await this.getBalances(asset);
 
       this.setState({
+        isFetching: false,
         web3,
         asset,
         daiBalance,
@@ -87,7 +81,6 @@ class App extends React.Component {
     const network = window.aztec.web3.getNetwork();
     this.setState(
       {
-        sdkLoaded: true,
         account: account.address,
         network
       },
@@ -107,11 +100,14 @@ class App extends React.Component {
         <Centered>
           <Router>
             <AppLayout>
-              <Main
-                daiBalance={this.state.daiBalance}
-                zkDaiBalance={this.state.zkDaiBalance}
-              />
               <Switch>
+                <Route path="/" exact>
+                  <Main
+                    daiBalance={this.state.daiBalance}
+                    zkDaiBalance={this.state.zkDaiBalance}
+                    isFetching={this.state.isFetching}
+                  />
+                </Route>
                 <Route path="/create-escrow" exact component={CreateEscrow} />
                 <Route path="/check-escrow" exact component={CheckEscrow} />
                 <Route path="/approve-escrow" exact component={ApproveEscrow} />

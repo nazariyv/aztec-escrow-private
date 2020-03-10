@@ -1,9 +1,9 @@
-import ApproveEscrow from "./ApproveEscrow";
-import CheckEscrow from "./CheckEscrow";
-import CreateEscrow from "./CreateEscrow";
-import HowItWorks from "./HowItWorks";
-import ReleaseEscrow from "./ReleaseEscrow";
-import Main from "./Main";
+import ApproveEscrow from "./approve-escrow";
+import CheckEscrow from "./check-escrow";
+import CreateEscrow from "./create-escrow";
+import HowItWorks from "./how-it-works";
+import ReleaseEscrow from "./release-escrow";
+import Main from "./main";
 
 export {
   ApproveEscrow,

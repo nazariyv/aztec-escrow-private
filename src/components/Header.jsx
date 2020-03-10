@@ -12,7 +12,18 @@ const Header = ({ history }) => {
   return (
     <HeaderNavigation>
       <StyledNavigationList $align={ALIGN.left}>
-        <StyledNavigationItem>Ethereum Private Escrow</StyledNavigationItem>
+        <StyledNavigationItem>
+          <a
+            href="$"
+            style={{ textDecoration: "none", color: "black" }}
+            onClick={event => {
+              event.preventDefault();
+              history.push("/");
+            }}
+          >
+            Ethereum Private Escrow
+          </a>
+        </StyledNavigationItem>
       </StyledNavigationList>
       <StyledNavigationList $align={ALIGN.center} />
       <StyledNavigationList $align={ALIGN.right}></StyledNavigationList>
