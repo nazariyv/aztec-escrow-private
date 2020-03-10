@@ -103,13 +103,7 @@ class App extends React.Component {
             <AppLayout>
               <Switch>
                 <Route path="/" exact>
-                  <Block
-                    display="flex"
-                    flexDirection="row"
-                    height="100%"
-                    alignItems="center"
-                    justifyContent="space-evenly"
-                  >
+                  <Block maxWidth="600px" padding="20px" height="100%">
                     <Main
                       daiBalance={this.state.daiBalance}
                       zkDaiBalance={this.state.zkDaiBalance}
