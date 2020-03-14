@@ -3,18 +3,96 @@ import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Label2, Paragraph2 } from "baseui/typography";
 import { Button } from "baseui/button";
+import secp256k1 from "@aztec/secp256k1";
+import { note, JoinSplitProof } from "aztec.js";
 
-export default ({ web3 }) => {
+import {
+  PRIVATE_ESCROW_ADDRESS,
+  ZK_ASSET_ADDRESS,
+  TEST_ACCOUNT_ADDRESS
+} from "../consts";
+
+const dummyPubKey = secp256k1.generateAccount().publicKey; // used for creating notes. ramifications not known. aztec does not respond on Discord / Telegram
+
+export default ({ aztec, web3, zkBalance, zkAsset }) => {
   const [receiver, setReceiver] = useState("");
   const [isValidReceiver, setIsValidReceiver] = useState(null);
   const [receiverVisited, setReceiverVisited] = useState(false);
 
+  const [zkAmount, setZkAmount] = useState(null);
+  const [isValidZkAmount, setIsValidZkAmount] = useState(null);
+  const [zkAmountVisited, setZkAmountVisited] = useState(false);
+
   const shouldShowReceiverError = receiverVisited && !isValidReceiver;
+  const shouldShowZkError = zkAmountVisited && !isValidZkAmount;
 
   const onReceiverChange = e => {
     setReceiver(e.target.value);
     setIsValidReceiver(web3 ? web3.utils.isAddress(e.target.value) : null);
   };
+
+  const onZkAmountChange = e => {
+    setZkAmount(e.target.value);
+    setIsValidZkAmount(zkBalance >= e.target.value);
+  };
+
+  const createNote = (value, access, noteOwner) => {
+    try {
+      if (!web3.utils.isAddress(noteOwner)) return;
+      const resolvedAccess = [...access, web3.eth.getAccounts()[0]];
+      return note(dummyPubKey, value, resolvedAccess, noteOwner);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const createJoinSplitProof = (inputNotes, outputNotes, publicValue) => {
+    try {
+      const senderAndOwner = web3.eth.getAccounts()[0];
+      return new JoinSplitProof(
+        inputNotes,
+        outputNotes,
+        senderAndOwner,
+        publicValue,
+        senderAndOwner
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onClick = async e => {
+    e.preventDefault();
+    // const accounts = await web3.eth.getAccounts();
+    // const testAcc = TEST_ACCOUNT_ADDRESS;
+
+    const notes = await zkAsset.send(
+      [
+        {
+          to: "0xDABADe2B56B6f3aa9F1826C23A51bb816c3d92da",
+          // aztecAccountNotRequired: true,
+          amount: 5,
+          numberOfOutputNotes: 1
+        }
+      ],
+      {
+        // userAccess: ["0xDABADe2B56B6f3aa9F1826C23A51bb816c3d92da"] // gives view access to sender and reciever
+      }
+    );
+    console.log("created note is", notes);
+  };
+
+  // const onClick = async e => {
+  //   e.preventDefault();
+  //   const inputNotes = [createNote(zkAmount, [], PRIVATE_ESCROW_ADDRESS)];
+  //   const outputNotes = [createNote(zkAmount, [], PRIVATE_ESCROW_ADDRESS)];
+  //   const proof = createJoinSplitProof(inputNotes, outputNotes, 0);
+
+  //   const zkAsset = new web3.eth.Contract(ZkAsset.abi, ZK_ASSET_ADDRESS);
+  //   await zkAsset.methods
+  //     .confidentialTransfer(proof, signatures)
+  //     .send({ from: web3.eth.getAccounts[0] });
+  // };
 
   return (
     <>
@@ -50,10 +128,24 @@ export default ({ web3 }) => {
       <FormControl
         label={() => "Escrow zkDAI amount"}
         caption={() => "Amount of zkDAI you wish to lock up in escrow"}
+        error={() =>
+          shouldShowZkError
+            ? "the amount of zk you are trying to send is above your balance"
+            : null
+        }
       >
-        <Input placeholder="20" />
+        <Input
+          placeholder="20"
+          value={zkAmount}
+          error={shouldShowZkError}
+          positive={zkAmountVisited && isValidZkAmount}
+          onChange={onZkAmountChange}
+          onBlur={() => setZkAmountVisited(true)}
+        />
       </FormControl>
-      <Button>Create</Button>
+      <Button disabled={!isValidZkAmount || !isValidReceiver} onClick={onClick}>
+        Create
+      </Button>
     </>
   );
 };

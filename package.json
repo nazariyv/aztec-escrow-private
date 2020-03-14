@@ -5,6 +5,7 @@
   "dependencies": {
     "@aztec/contract-addresses": "^1.18.0",
     "@aztec/contract-artifacts": "^1.20.0",
+    "@aztec/protocol": "^1.6.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.1",
     "@testing-library/user-event": "^7.2.1",
@@ -51,6 +52,7 @@
     "@nomiclabs/buidler": "^1.2.0",
     "@nomiclabs/buidler-truffle5": "^1.2.0",
     "@nomiclabs/buidler-web3": "^1.2.0",
+    "aztec.js": "^0.17.0",
     "web3": "^1.2.0"
   }
 }
